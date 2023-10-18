@@ -39,11 +39,18 @@ class NearEarthObject:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
-        self.designation = info.get('pdes', '') 
+        self.designation = info.get('designation', '') 
         self.name = info.get('name', None)
         diameter_str = info.get('diameter', 'nan')
-        self.diameter = float(diameter_str) if diameter_str != 'nan' else float('nan')
-        self.hazardous = bool(info.get('pha', False))
+        
+        try:
+            integer_value = int(diameter_str)
+            self.diameter = float(integer_value)
+        except (ValueError, TypeError):
+            # Handle the case when the conversion fails
+            self.diameter = float('nan')
+            
+        self.hazardous = bool(info.get('hazardous', False))
 
         # Create an empty initial collection of linked approaches.
         self.approaches = []
@@ -55,8 +62,11 @@ class NearEarthObject:
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"A NearEarthObject called {self.name} has a designation of {self.designation} and a" \
-               f"diameter of {self.diameter:.3f}."
+        pha_indication = True
+        if self.hazardous == pha_indication:
+            pha_indication = 'is'
+        else: pha_indication = 'is not'
+        return f"NEO {self.fullname} has a diameter of {self.diameter:.3f} km and {pha_indication} hazordous."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -83,13 +93,13 @@ class CloseApproach:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """      
-        self._designation = info.get('des', '') 
-        self.time = info.get(cd_to_datetime('cd'), None)
-        self.distance = info.get('dist_min',0.0)
-        self.velocity = info.get('v_rel',0.0)
+        self._designation = info.get('_designation', '')  #des
+        self.time = cd_to_datetime(info.get('time', '')) #info.get(cd_to_datetime('time'), None) #cd
+        self.distance = info.get('distance',0.0) #dist_min
+        self.velocity = info.get('velocity',0.0) #v_rel
 
         # Create an attribute for the referenced NEO, originally None.
-        self.neo = None
+        self.neo = info.get('neo', None)
 
     @property
     def time_str(self):
@@ -104,8 +114,8 @@ class CloseApproach:
         formatted string that can be used in human-readable representations and
         in serialization to CSV and JSON files.
         """
-    def datetime(self):
-        """Return a representation of the datetime of this CloseApproach."""
+    # def datetime(self):
+    #     """Return a representation of the datetime of this CloseApproach."""
         return f"{datetime_to_str(self.time)}"
 
     def fullname(self):
@@ -114,8 +124,7 @@ class CloseApproach:
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"A CloseApproach with a time of {self.time_str!r}, a distance of {self.distance:.2f}, " \
-               f"a velocity of {self.velocity:.2f} and the related neo: {self.neo!r}"
+        return f"At {self.time_str}, {self.neo!r} approaches Earth at a distance of {self.distance:.2f} au and a velocity of {self.velocity:.2f} km/s."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
