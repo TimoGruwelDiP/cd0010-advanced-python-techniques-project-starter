@@ -47,9 +47,8 @@ class NearEarthObject:
             integer_value = int(diameter_str)
             self.diameter = float(integer_value)
         except (ValueError, TypeError):
-            # Handle the case when the conversion fails
             self.diameter = float('nan')
-            
+
         self.hazardous = bool(info.get('hazardous', False))
 
         # Create an empty initial collection of linked approaches.
@@ -93,10 +92,10 @@ class CloseApproach:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """      
-        self._designation = info.get('_designation', '')  #des
-        self.time = cd_to_datetime(info.get('time', '')) #info.get(cd_to_datetime('time'), None) #cd
-        self.distance = info.get('distance',0.0) #dist_min
-        self.velocity = info.get('velocity',0.0) #v_rel
+        self._designation = info.get('des', '')  #des
+        self.time = cd_to_datetime(info.get('cd', None)) #info.get(cd_to_datetime('time'), None) #
+        self.distance = float(info.get('dist_min',0.0)) #dist_min
+        self.velocity = float(info.get('v_rel',0.0)) #v_rel
 
         # Create an attribute for the referenced NEO, originally None.
         self.neo = info.get('neo', None)
@@ -114,8 +113,6 @@ class CloseApproach:
         formatted string that can be used in human-readable representations and
         in serialization to CSV and JSON files.
         """
-    # def datetime(self):
-    #     """Return a representation of the datetime of this CloseApproach."""
         return f"{datetime_to_str(self.time)}"
 
     def fullname(self):
