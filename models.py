@@ -39,18 +39,18 @@ class NearEarthObject:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
-        self.designation = info.get('designation', '') 
-        self.name = info.get('name', None)
+        self.designation = info.get('pdes', '') 
+        self.name = None if info.get('name') == '' else info.get('name')
         diameter_str = info.get('diameter', 'nan')
         
         try:
-            integer_value = int(diameter_str)
-            self.diameter = float(integer_value)
+            self.diameter = float(diameter_str)
         except (ValueError, TypeError):
             self.diameter = float('nan')
 
-        self.hazardous = bool(info.get('hazardous', False))
-
+        self.hazardous = True if info.get('pha') == 'Y' else False
+        self.hazardous2 = info.get('pha')
+        
         # Create an empty initial collection of linked approaches.
         self.approaches = []
 
@@ -59,18 +59,18 @@ class NearEarthObject:
         """Return a representation of the full name of this NEO."""
         return f"{self.designation} {self.name}"
 
-    def __str__(self):
-        """Return `str(self)`."""
-        pha_indication = True
-        if self.hazardous == pha_indication:
-            pha_indication = 'is'
-        else: pha_indication = 'is not'
-        return f"NEO {self.fullname} has a diameter of {self.diameter:.3f} km and {pha_indication} hazordous."
+    # def __str__(self):
+    #     """Return `str(self)`."""
+    #     pha_indication = True
+    #     if self.hazardous == pha_indication:
+    #         pha_indication = 'is'
+    #     else: pha_indication = 'is not'
+    #     return f"NEO {self.fullname} has a diameter of {self.diameter:.3f} km and {pha_indication} hazordous."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, " \
-               f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})"
+               f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r}), approaches={self.approaches!r})"
 
 class CloseApproach:
     """A close approach to Earth by an NEO.
@@ -92,13 +92,13 @@ class CloseApproach:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """      
-        self._designation = info.get('des', '')  #des
-        self.time = cd_to_datetime(info.get('cd', None)) #info.get(cd_to_datetime('time'), None) #
-        self.distance = float(info.get('dist_min',0.0)) #dist_min
-        self.velocity = float(info.get('v_rel',0.0)) #v_rel
+        self._designation = info.get('des', '') 
+        self.time = cd_to_datetime(info.get('cd', None))
+        self.distance = float(info.get('dist_min',0.0))
+        self.velocity = float(info.get('v_rel',0.0))
 
         # Create an attribute for the referenced NEO, originally None.
-        self.neo = info.get('neo', None)
+        self.neo = None
 
     @property
     def time_str(self):
