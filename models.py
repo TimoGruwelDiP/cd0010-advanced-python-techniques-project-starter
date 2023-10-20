@@ -49,7 +49,6 @@ class NearEarthObject:
             self.diameter = float('nan')
 
         self.hazardous = True if info.get('pha') == 'Y' else False
-        self.hazardous2 = info.get('pha')
         
         # Create an empty initial collection of linked approaches.
         self.approaches = []
@@ -59,13 +58,13 @@ class NearEarthObject:
         """Return a representation of the full name of this NEO."""
         return f"{self.designation} {self.name}"
 
-    # def __str__(self):
-    #     """Return `str(self)`."""
-    #     pha_indication = True
-    #     if self.hazardous == pha_indication:
-    #         pha_indication = 'is'
-    #     else: pha_indication = 'is not'
-    #     return f"NEO {self.fullname} has a diameter of {self.diameter:.3f} km and {pha_indication} hazordous."
+    def __str__(self):
+        """Return `str(self)`."""
+        pha_indication = True
+        if self.hazardous == pha_indication:
+            pha_indication = 'is'
+        else: pha_indication = 'is not'
+        return f"NEO {self.fullname} has a diameter of {self.diameter:.3f} km and {pha_indication} hazordous."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -94,7 +93,7 @@ class CloseApproach:
         """      
         self._designation = info.get('des', '') 
         self.time = cd_to_datetime(info.get('cd', None))
-        self.distance = float(info.get('dist_min',0.0))
+        self.distance = float(info.get('dist',0.0))
         self.velocity = float(info.get('v_rel',0.0))
 
         # Create an attribute for the referenced NEO, originally None.

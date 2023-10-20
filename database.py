@@ -1,3 +1,4 @@
+from operator import attrgetter
 """A database encapsulating collections of near-Earth objects and their close approaches.
 
 A `NEODatabase` holds an interconnected data set of NEOs and close approaches.
@@ -89,7 +90,7 @@ class NEODatabase:
                 return neo
         return None 
 
-    def query(self, filters=()):
+    def query(self, filters=[]):
         """Query close approaches to generate those that match a collection of filters.
 
         This generates a stream of `CloseApproach` objects that match all of the
@@ -103,6 +104,8 @@ class NEODatabase:
         :param filters: A collection of filters capturing user-specified criteria.
         :return: A stream of matching `CloseApproach` objects.
         """
-        # TODO: Generate `CloseApproach` objects that match all of the filters.
         for approach in self._approaches:
-            yield approach
+        # Check if the approach matches all the provided filters
+            if all(filter_func(approach) for filter_func in filters):
+                yield approach
+
