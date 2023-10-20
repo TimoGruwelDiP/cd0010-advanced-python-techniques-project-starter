@@ -32,8 +32,7 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
-    # TODO: How can you, and should you, change the arguments to this constructor?
-    # If you make changes, be sure to update the comments in this file.
+    
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
 
@@ -49,8 +48,6 @@ class NearEarthObject:
             self.diameter = float('nan')
 
         self.hazardous = True if info.get('pha') == 'Y' else False
-        
-        # Create an empty initial collection of linked approaches.
         self.approaches = []
 
     @property
@@ -84,8 +81,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
-    # TODO: How can you, and should you, change the arguments to this constructor?
-    # If you make changes, be sure to update the comments in this file.
+
     def __init__(self, **info):
         """Create a new `CloseApproach`.
 
@@ -95,8 +91,6 @@ class CloseApproach:
         self.time = cd_to_datetime(info.get('cd', None))
         self.distance = float(info.get('dist',0.0))
         self.velocity = float(info.get('v_rel',0.0))
-
-        # Create an attribute for the referenced NEO, originally None.
         self.neo = None
 
     @property
