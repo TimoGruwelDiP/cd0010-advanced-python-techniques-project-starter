@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+    
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,31 +71,47 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 class DateFilter(AttributeFilter):
+    """DateFilter based on the Attributefilter class."""
+
     @classmethod
     def get(cls, approach):
+        """Get appraoach to return date."""
         return date(approach.time.year, approach.time.month, approach.time.day) #approach.time
     
 class DistanceFilter(AttributeFilter):
+    """DistanceFilter based on the Attributefilter class."""
+
     @classmethod
     def get(cls, approach):
+        """Get appraoach to return distance."""
         return approach.distance
 
 class VelocityFilter(AttributeFilter):
+    """VelocityFilter based on the Attributefilter class."""
+
     @classmethod
     def get(cls, approach):
+        """Get appraoach to return velocity."""
         return approach.velocity
     
 class DiameterFilter(AttributeFilter):
+    """DiameterFilter based on the Attributefilter class."""
+
     @classmethod
     def get(cls, approach):
+        """Get appraoach to return distance."""
         return approach.neo.diameter
     
 class HazardousFilter(AttributeFilter):
+    """HazardousFilter based on the Attributefilter class."""
+
     @classmethod
     def get(cls, approach):
+        """Get appraoach to return hazardous."""
         return approach.neo.hazardous
 
 def create_filters(
@@ -182,5 +199,3 @@ def limit(iterator, n=None):
             yield item
             count += 1
     return iterator
-
-
